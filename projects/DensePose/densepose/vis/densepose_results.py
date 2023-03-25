@@ -68,7 +68,7 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         image_bgr = self.get_image_bgr_from_context(context)
         matrix = self.data_extractor(iuv_arr)
         segm = self.segm_extractor(iuv_arr)
-        cv2.imwrite("/content/seg.jpg",segm*255)
+        cv2.imwrite("/content/seg.jpg",segm)
         mask = np.zeros(matrix.shape, dtype=np.uint8)
         mask[segm > 0] = 1
         image_bgr = self.mask_visualizer.visualize(image_bgr, mask, matrix, bbox_xywh)
