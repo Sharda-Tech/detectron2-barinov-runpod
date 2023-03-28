@@ -22,7 +22,9 @@ class DensePoseResultsVisualizer(object):
             return image_bgr
 
         boxes_xywh = boxes_xywh.cpu().numpy()
-        context = self.create_visualization_context(image_bgr)
+        image_target_bgr = np.zeros(image_bgr.shape, dtype=np.uint8)
+        context = self.create_visualization_context(image_target_bgr)
+        cv2.imwrite('/content/context.jpg',context)
         for i, result in enumerate(densepose_result):
             print("index",i)
             iuv_array = torch.cat(

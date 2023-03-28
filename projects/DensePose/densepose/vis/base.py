@@ -36,8 +36,6 @@ class MatrixVisualizer(object):
             image_target_bgr = image_bgr
         else:
             image_target_bgr = image_bgr * 0
-
-        image_target_bgr = np.zeros(image_bgr.shape, dtype=np.uint8)
         x, y, w, h = [int(v) for v in bbox_xywh]
         if w <= 0 or h <= 0:
             return image_bgr
@@ -55,10 +53,14 @@ class MatrixVisualizer(object):
         matrix_scaled_8u = matrix_scaled.clip(0, 255).astype(np.uint8)
         cv2.imwrite('/content/matrix.jpg',matrix_scaled_8u)
         matrix_vis = cv2.applyColorMap(matrix_scaled_8u, self.cmap)
+        cv2.imwrite('/content/matrix_vis.jpg',matrix_vis)
         matrix_vis[mask_bg] = image_target_bgr[y : y + h, x : x + w, :][mask_bg]
+        cv2.imwrite('/content/matrix_vis_bg.jpg',matrix_vis)
+        cv2.imwrite('/content/image_target_bgr_start.jpg',image_target_bgr)
         image_target_bgr[y : y + h, x : x + w, :] = (
             image_target_bgr[y : y + h, x : x + w, :] * (1.0 - self.alpha) + matrix_vis * self.alpha
         )
+        cv2.imwrite('/content/image_target_bgr_end.jpg',image_target_bgr)
         return image_target_bgr.astype(np.uint8)
 
     def _resize(self, mask, matrix, w, h):
