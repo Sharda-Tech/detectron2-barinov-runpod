@@ -24,6 +24,7 @@ class DensePoseResultsVisualizer(object):
         boxes_xywh = boxes_xywh.cpu().numpy()
         image_target_bgr = np.zeros(image_bgr.shape, dtype=np.uint8)
         context = self.create_visualization_context(image_target_bgr)
+        context_2 = self.create_visualization_context(image_target_bgr)
         cv2.imwrite('/content/context.jpg',context)
         for i, result in enumerate(densepose_result):
             print("index",i)
@@ -77,9 +78,9 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         mask = np.zeros(matrix.shape, dtype=np.uint8)
         mask[segm > 0] = 1
         print("Unique in mask",np.unique(mask), "shape",mask.shape)
-        cv2.imwrite("/content/mask_{}.jpg".format(index),segm)
+        cv2.imwrite("/content/mask_{}.jpg".format(index),mask)
         image_bgr = self.mask_visualizer.visualize(image_bgr, mask, matrix, bbox_xywh)
-
+        cv2.imwrite("/content/image_bgr_{}.jpg".format(index),image_bgr)
 
 def _extract_i_from_iuvarr(iuv_arr):
     return iuv_arr[0, :, :]

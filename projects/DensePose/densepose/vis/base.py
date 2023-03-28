@@ -36,12 +36,14 @@ class MatrixVisualizer(object):
             image_target_bgr = image_bgr
         else:
             image_target_bgr = image_bgr * 0
+
         x, y, w, h = [int(v) for v in bbox_xywh]
         if w <= 0 or h <= 0:
             return image_bgr
         mask, matrix = self._resize(mask, matrix, w, h)
         print("Matrix unique value before scale",np.unique(matrix))
         mask_bg = np.tile((mask == 0)[:, :, np.newaxis], [1, 1, 3])
+        segm_bg = np.tile((mask == 0)[:, :, np.newaxis], [1, 1, 3])
         matrix_scaled = matrix.astype(np.float32) * self.val_scale
         print("Matrix unique value after scale",np.unique(matrix_scaled))
         _EPSILON = 1e-6
