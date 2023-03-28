@@ -24,10 +24,11 @@ class DensePoseResultsVisualizer(object):
         boxes_xywh = boxes_xywh.cpu().numpy()
         context = self.create_visualization_context(image_bgr)
         for i, result in enumerate(densepose_result):
+            print("index",i)
             iuv_array = torch.cat(
                 (result.labels[None].type(torch.float32), result.uv * 255.0)
             ).type(torch.uint8)
-            self.visualize_iuv_arr(context, iuv_array.cpu().numpy(), boxes_xywh[i])
+            self.visualize_iuv_arr(context, iuv_array.cpu().numpy(), boxes_xywh[i], i)
         image_bgr = self.context_to_image_bgr(context)
         return image_bgr
 
@@ -64,13 +65,17 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
     def context_to_image_bgr(self, context):
         return context
 
-    def visualize_iuv_arr(self, context, iuv_arr: np.ndarray, bbox_xywh) -> None:
+    def visualize_iuv_arr(self, context, iuv_arr: np.ndarray, bbox_xywh, index) -> None:
         image_bgr = self.get_image_bgr_from_context(context)
         matrix = self.data_extractor(iuv_arr)
         segm = self.segm_extractor(iuv_arr)
-        cv2.imwrite("/content/seg.jpg",segm)
+        print("Saving Segmented Result")
+        print("Unique in segm",np.unique(segm), "shape",segm.shape)
+        cv2.imwrite("/content/seg_{}.jpg".format(index),segm)
         mask = np.zeros(matrix.shape, dtype=np.uint8)
         mask[segm > 0] = 1
+        print("Unique in mask",np.unique(mask), "shape",mask.shape)
+        cv2.imwrite("/content/mask_{}.jpg".format(index),segm)
         image_bgr = self.mask_visualizer.visualize(image_bgr, mask, matrix, bbox_xywh)
 
 
@@ -319,6 +324,7 @@ except ModuleNotFoundError:
 
 class DensePoseResultsFineSegmentationVisualizer(DensePoseMaskedColormapResultsVisualizer):
     def __init__(self, inplace=True, cmap=cv2.COLORMAP_PARULA, alpha=0.7, **kwargs):
+        print("Called")
         super(DensePoseResultsFineSegmentationVisualizer, self).__init__(
             _extract_i_from_iuvarr,
             _extract_i_from_iuvarr,
