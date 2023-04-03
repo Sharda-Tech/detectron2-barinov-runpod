@@ -72,9 +72,16 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         image_bgr = self.get_image_bgr_from_context(context)
         matrix = self.data_extractor(iuv_arr)
         segm = self.segm_extractor(iuv_arr)
+        x, y, w, h = [int(v) for v in bbox_xywh]
         print("Saving Segmented Result")
         print("Unique in segm",np.unique(segm), "shape",segm.shape)
-        cv2.imwrite("/content/seg_{}.jpg".format(index),segm)
+        img = cv2.imread('/content/detectron2/projects/DensePose/image.png')
+        img_k = img[y : y + h, x : x + w, :]
+        img_t = cv2.copyMakeBorder(img_k, 14, 0, x, (192-(x+w)), cv2.BORDER_CONSTANT, None, value = (255,255,255))
+        cv2.imwrite("/content/img_t_{}.jpg".format(index),img_t)
+        segm_t = cv2.copyMakeBorder(segm, 14, 0, x, (192-(x+w)), cv2.BORDER_CONSTANT, None, value = (0,0,0))
+        np.save("/content/seg_{}.npy".format(index),segm_t)
+        cv2.imwrite("/content/seg_{}.jpg".format(index),segm_t)
         mask = np.zeros(matrix.shape, dtype=np.uint8)
         mask[segm > 0] = 1
         print("Unique in mask",np.unique(mask), "shape",mask.shape)
