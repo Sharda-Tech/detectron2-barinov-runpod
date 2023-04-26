@@ -78,10 +78,8 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         img = cv2.imread('/content/detectron2-vtonhd/projects/DensePose/image.png')
         img_k = img[y : y + h, x : x + w, :]
         img_t = cv2.copyMakeBorder(img_k, y, (img.shape[0]-(y+h)), x, (img.shape[1]-(x+w)), cv2.BORDER_CONSTANT, None, value = (255,255,255))
-        img_t = cv2.resize(img_t,(762,1100))
         cv2.imwrite("/content/img_t_{}.jpg".format(index),img_t)
         segm_t = cv2.copyMakeBorder(segm, y, (img.shape[0]-(y+h)), x, (img.shape[1]-(x+w)), cv2.BORDER_CONSTANT, None, value = (0,0,0))
-        segm_t = cv2.resize(segm_t,(762,1100)) 
         np.save("/content/seg_{}.npy".format(index),segm_t)
         cv2.imwrite("/content/seg_{}.jpg".format(index),segm_t)
         mask = np.zeros(matrix.shape, dtype=np.uint8)
