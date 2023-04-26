@@ -75,7 +75,7 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         x, y, w, h = [int(v) for v in bbox_xywh]
         print("Saving Segmented Result")
         print("Unique in segm",np.unique(segm), "shape",segm.shape)
-        img = cv2.imread('/content/detectron2-vtonhd/projects/DensePose/image.png')
+        img = cv2.imread('/content/detectron2-barinov/projects/DensePose/image.png')
         img_k = img[y : y + h, x : x + w, :]
         img_t = cv2.copyMakeBorder(img_k, y, (img.shape[0]-(y+h)), x, (img.shape[1]-(x+w)), cv2.BORDER_CONSTANT, None, value = (255,255,255))
         cv2.imwrite("/content/img_t_{}.jpg".format(index),img_t)
