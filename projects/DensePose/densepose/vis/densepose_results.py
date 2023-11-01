@@ -25,7 +25,7 @@ class DensePoseResultsVisualizer(object):
         image_target_bgr = np.zeros(image_bgr.shape, dtype=np.uint8)
         context = self.create_visualization_context(image_target_bgr)
         context_2 = self.create_visualization_context(image_target_bgr)
-        cv2.imwrite('/content/context.jpg',context)
+        cv2.imwrite('./context.jpg',context)
         for i, result in enumerate(densepose_result):
             print("index",i)
             iuv_array = torch.cat(
@@ -75,19 +75,19 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         x, y, w, h = [int(v) for v in bbox_xywh]
         print("Saving Segmented Result")
         print("Unique in segm",np.unique(segm), "shape",segm.shape)
-        img = cv2.imread('/content/detectron2-barinov/projects/DensePose/image.png')
+        img = cv2.imread('./image.png')
         img_k = img[y : y + h, x : x + w, :]
         img_t = cv2.copyMakeBorder(img_k, y, (img.shape[0]-(y+h)), x, (img.shape[1]-(x+w)), cv2.BORDER_CONSTANT, None, value = (255,255,255))
-        cv2.imwrite("/content/img_t_{}.jpg".format(index),img_t)
+        cv2.imwrite("./img_t_{}.jpg".format(index),img_t)
         segm_t = cv2.copyMakeBorder(segm, y, (img.shape[0]-(y+h)), x, (img.shape[1]-(x+w)), cv2.BORDER_CONSTANT, None, value = (0,0,0))
-        np.save("/content/seg_{}.npy".format(index),segm_t)
-        cv2.imwrite("/content/seg_{}.jpg".format(index),segm_t)
+        np.save("./seg_{}.npy".format(index),segm_t)
+        cv2.imwrite("./seg_{}.jpg".format(index),segm_t)
         mask = np.zeros(matrix.shape, dtype=np.uint8)
         mask[segm > 0] = 1
         print("Unique in mask",np.unique(mask), "shape",mask.shape)
-        cv2.imwrite("/content/mask_{}.jpg".format(index),mask)
+        cv2.imwrite("./mask_{}.jpg".format(index),mask)
         image_bgr = self.mask_visualizer.visualize(image_bgr, mask, matrix, bbox_xywh)
-        cv2.imwrite("/content/image_bgr_{}.jpg".format(index),image_bgr)
+        cv2.imwrite("./image_bgr_{}.jpg".format(index),image_bgr)
 
 def _extract_i_from_iuvarr(iuv_arr):
     return iuv_arr[0, :, :]
