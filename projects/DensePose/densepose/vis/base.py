@@ -53,16 +53,16 @@ class MatrixVisualizer(object):
                 f"Matrix has values > {255 + _EPSILON} after " f"scaling, clipping to [0..255]"
             )
         matrix_scaled_8u = matrix_scaled.clip(0, 255).astype(np.uint8)
-        cv2.imwrite('/content/matrix.jpg',matrix_scaled_8u)
+        cv2.imwrite('./matrix.jpg',matrix_scaled_8u)
         matrix_vis = cv2.applyColorMap(matrix_scaled_8u, self.cmap)
-        cv2.imwrite('/content/matrix_vis.jpg',matrix_vis)
+        cv2.imwrite('./matrix_vis.jpg',matrix_vis)
         matrix_vis[mask_bg] = image_target_bgr[y : y + h, x : x + w, :][mask_bg]
-        cv2.imwrite('/content/matrix_vis_bg.jpg',matrix_vis)
-        cv2.imwrite('/content/image_target_bgr_start.jpg',image_target_bgr)
+        cv2.imwrite('./matrix_vis_bg.jpg',matrix_vis)
+        cv2.imwrite('./image_target_bgr_start.jpg',image_target_bgr)
         image_target_bgr[y : y + h, x : x + w, :] = (
             image_target_bgr[y : y + h, x : x + w, :] * (1.0 - self.alpha) + matrix_vis * self.alpha
         )
-        cv2.imwrite('/content/image_target_bgr_end.jpg',image_target_bgr)
+        cv2.imwrite('./image_target_bgr_end.jpg',image_target_bgr)
         return image_target_bgr.astype(np.uint8)
 
     def _resize(self, mask, matrix, w, h):
